@@ -6,17 +6,10 @@ interface DataObject {
   [key: string]: number;
 }
 
-
-interface OptionsObject {
-  data: DataObject;
-}
-
-
 interface ChartProps {
   rawData: DataObject;
-  options: OptionsObject,
-  width: number,
-  height: number,
+  width: number;
+  height: number;
 }
 
 
@@ -27,17 +20,36 @@ export default (props: ChartProps) => {
         data={{
           labels: Object.keys(props.rawData),
           datasets: [{
-              label: 'History',
-              data: Object.values(props.rawData),
-              borderWidth: 1
+            label: 'Rate history',
+            data: Object.values(props.rawData),
+            backgroundColor: '#299',
+            borderColor: '#299',
+            fill: false,
           }]
         }}
-        options={props.options}
+        options={{
+          responsive: true,
+          maintainAspectRatio: true, 
+          tooltips: {
+            mode: 'index',
+            intersect: false,
+          },
+          hover: {
+            mode: 'nearest',
+            intersect: true
+          },
+        }}
+        height={props.height}
+        width={props.width}
       />
       <style jsx>{`
         canvas {
+          
+        }
+        div {
           width: 100%;
-          height: 100%;
+          display: flex;
+          justify-content: center;
         }
       `}</style>
     </div>

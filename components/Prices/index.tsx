@@ -94,13 +94,18 @@ class Prices extends React.Component<PricesProps, PricesState> {
         </select>
 
         <div id="chartContainer" >
-          <Chart rawData={historyData} />
+          <Chart
+            rawData={historyData}
+            height={300}
+            width={800}
+          />
         </div>
 
         <style jsx>{`
           #chartContainer {
-            width: 100%;
-            height: 400px;
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
           }
         `}</style>
       </div>
