@@ -1,6 +1,10 @@
+import React from 'react';
+import Fetch from 'isomorphic-unfetch';
+
+import Chart from '../Chart';
 
 
-export interface BPI {
+interface BPI {
   USD: {
     code: string;
     description: string;
@@ -24,14 +28,20 @@ export interface BPI {
   }
 }
 
-export interface PricesProps {
+interface PricesProps {
   bpi: BPI,
 }
 
-export interface PricesState {
+interface HistoryObject {
+  [key: string]: number;
+}
+
+interface PricesState {
   currency: string;
   posCurrencies: string[];
+  historyData: HistoryObject;
 }
+
 
 
 class Prices extends React.Component<PricesProps, PricesState> {
@@ -43,13 +53,29 @@ class Prices extends React.Component<PricesProps, PricesState> {
     this.state = {
       currency: 'USD',
       posCurrencies: [ 'USD', 'EUR', 'GBP'],
+      historyData: {},
     };
+    this.handleCurrencyChange = this.handleCurrencyChange.bind(this);
+  }
+
+  async componentDidMount() {
+    const res = await Fetch(`https://api.coindesk.com/v1/bpi/historical/close.json?currency=${this.state.currency}`);
+    const data = await res.json();
+    this.setState({ historyData: data.bpi });
+  }
+
+  handleCurrencyChange(e) {
+    const { value } = e.target;
+    this.setState({ currency: value }, async () => {
+      const res = await Fetch(`https://api.coindesk.com/v1/bpi/historical/close.json?currency=${this.state.currency}`);
+      const data = await res.json();
+      this.setState({ historyData: data.bpi });
+    })
   }
 
   render() {
-    const { currency, posCurrencies } = this.state;
+    const { currency, posCurrencies, historyData } = this.state;
     const { bpi } = this.props;
-
     return (
       <div>
         <ul className="list-group">
@@ -61,13 +87,22 @@ class Prices extends React.Component<PricesProps, PricesState> {
         </ul>
         <br />
         <select
-          onChange={e => this.setState({ currency: e.target.value })}
+          onChange={this.handleCurrencyChange}
           className="form-control"
         >
-          {posCurrencies.map(c => (
-            <option key={c} value={c} selected={c===currency}>{c}</option>
-          ))}
+          {posCurrencies.map(c => <option key={c} value={c} selected={c===currency}>{c}</option> )}
         </select>
+
+        <div id="chartContainer" >
+          <Chart rawData={historyData} />
+        </div>
+
+        <style jsx>{`
+          #chartContainer {
+            width: 100%;
+            height: 400px;
+          }
+        `}</style>
       </div>
     )
   }
