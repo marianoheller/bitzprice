@@ -40,9 +40,6 @@ export default (props: ChartProps) => {
         width={props.width}
       />
       <style jsx>{`
-        canvas {
-          
-        }
         div {
           width: 100%;
           display: flex;
