@@ -2,6 +2,7 @@ import React from 'react';
 import Fetch from 'isomorphic-unfetch';
 
 import Chart from '../Chart';
+import ErrorBoundary from '../ErrorBoundary';
 
 
 interface BPI {
@@ -78,27 +79,31 @@ class Prices extends React.Component<PricesProps, PricesState> {
     const { bpi } = this.props;
     return (
       <div>
-        <ul className="list-group">
-          <li className="list-group-item">
-            Bitcoin rate for {bpi[currency].description}:
-            <span className="badge badge-primary">{bpi[currency].code}</span>
-            <strong>{bpi[currency].rate}</strong>
-          </li>
-        </ul>
-        <br />
-        <select
-          onChange={this.handleCurrencyChange}
-          className="form-control"
-        >
-          {posCurrencies.map(c => <option key={c} value={c} selected={c===currency}>{c}</option> )}
-        </select>
+        <ErrorBoundary>
+          <ul className="list-group">
+            <li className="list-group-item">
+              Bitcoin rate for {bpi[currency].description}:
+              <span className="badge badge-primary">{bpi[currency].code}</span>
+              <strong>{bpi[currency].rate}</strong>
+            </li>
+          </ul>
+          <br />
+          <select
+            onChange={this.handleCurrencyChange}
+            className="form-control"
+          >
+            {posCurrencies.map(c => <option key={c} value={c} selected={c===currency}>{c}</option> )}
+          </select>
+        </ErrorBoundary>
 
         <div id="chartContainer" >
-          <Chart
-            rawData={historyData}
-            height={400}
-            width={800}
-          />
+          <ErrorBoundary>
+            <Chart
+              rawData={historyData}
+              height={400}
+              width={800}
+            />
+          </ErrorBoundary>
         </div>
 
         <style jsx>{`
