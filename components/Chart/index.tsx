@@ -22,22 +22,19 @@ export default (props: ChartProps) => {
           datasets: [{
             label: 'Rate history',
             data: Object.values(props.rawData),
-            backgroundColor: '#299',
-            borderColor: '#299',
-            fill: false,
+            fillColor: "rgba(47, 164, 231, 0.2)",
+            strokeColor: "rgba(47, 164, 231, 0.75)",
+            pointColor: "rgba(47, 164, 231, 1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220, 220, 220, 1)",
           }]
         }}
         options={{
           responsive: true,
-          maintainAspectRatio: true, 
-          tooltips: {
-            mode: 'index',
-            intersect: false,
-          },
-          hover: {
-            mode: 'nearest',
-            intersect: true
-          },
+          maintainAspectRatio: true,
+          bezierCurve : true,
+          tooltipFillColor: "rgba(0,0,0,0.75)",
         }}
         height={props.height}
         width={props.width}

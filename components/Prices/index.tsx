@@ -96,7 +96,7 @@ class Prices extends React.Component<PricesProps, PricesState> {
         <div id="chartContainer" >
           <Chart
             rawData={historyData}
-            height={300}
+            height={400}
             width={800}
           />
         </div>
